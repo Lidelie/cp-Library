@@ -1,5 +1,8 @@
 # cp-Library
 Lidelie's Competitive Programming Library  
+Lidelieの競プロライブラリです。
+
+
 ドキュメント↓  
 https://lidelie.github.io/cp-Library/
 
