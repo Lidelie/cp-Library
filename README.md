@@ -3,6 +3,9 @@ Lidelie's Competitive Programming Library
 ドキュメント↓  
 https://lidelie.github.io/cp-Library/
 
+工事中
+ぜんぶまぜスニペット->
+
 
 てすと  
 注意書きでもかいておくか  
