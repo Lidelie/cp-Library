@@ -11,6 +11,48 @@
     <div>
         <p>(重み付き)グラフを扱います。</p>
     </div>
+    <h2>コンストラクタ</h2>
+    <pre><code>weighted_graph wg(ll n);</code></pre>
+    <div>
+        <p>n頂点0辺のグラフを構築します。</p>
+    </div>
+    <h3>計算量</h3>
+    <p>\(O(n)\)</p>
+
+    <h2>add_edge / add_directed_edge</h2>
+    <pre><code>wg.add_edge(ll a,ll b,ll cost = 1);
+wg.add_directed_edge(ll from,ll to,ll cost = 1);
+    </code></pre>
+    <div>
+        <p>頂点\(a\)と\(b\)を結ぶ重み\(cost\)の無効辺または、</p>
+        <p>頂点\(from\)から\(to\)への重み\(cost\)の有効辺を貼ります。</p>
+        <p><code>cost</code>を指定しなかった場合重み1として扱います。</p>
+    </div>
+    <h3>計算量</h3>
+    <p>\(O(1)\)</p>
+
+    <h2>dijkstra</h2>
+    <pre><code>wg.dijkstra(ll s);</code></pre>
+    <div>
+        <p>dijkstra法を用いて頂点\(s\)から各頂点への最短距離を求めます。</p>
+    </div>
+    <h3>返り値</h3>
+    <div>
+        <code><p>vector&lt;ll&gt; res</ll></p></code>
+        <p>\(res_i\)は頂点\(s\)から\(i\)への最短距離。</p>
+    </div>
+    <h3>計算量</h3>
+    <p>\(O(n)\)</p>
+
+    <h2>e[i]</h2>
+    <pre><code>for(auto edge : wg.e[i]){
+    ll to,cost;
+    tie(to,cost) = edge;
+}</code></pre>
+    <div>
+        <p>\(e_i\)は頂点\(i\)から移動することのできる "頂点番号と、その頂点へ向かう辺のコスト"のpairです。</p>
+    </div>
+
     <ul>
         <li><a href="../index.html">もどる</a></li>
     </ul>
