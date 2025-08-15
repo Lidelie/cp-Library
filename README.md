@@ -7,7 +7,7 @@ Lidelieの競プロライブラリです。
 https://lidelie.github.io/cp-Library/
 
 工事中
-ぜんぶまぜスニペット->
+
 
 
 てすと  
