@@ -52,10 +52,10 @@ namespace LidelieLib{
             public static void Out(float[] arg){Console.Write(string.Join(' ',arg) + "\n");}
             public static void Out(double[] arg){Console.Write(string.Join(' ',arg) + "\n");}
             public static void Out(params object[] arg){Console.Write(string.Join(' ',arg) + "\n");}
-            public static void Yes(){Console.Write("Yes");}
-            public static void No(){Console.Write("No");}
+            public static void Yes(){Console.Write("Yes\n");}
+            public static void No(){Console.Write("No\n");}
         }
-        public static int LowerBound<T>(IReadOnlyList<T> list, T value, IComparer<T> comparer = null){
+        public static int LowerBound<T>(this IReadOnlyList<T> list, T value, IComparer<T> comparer = null){
             comparer ??= Comparer<T>.Default;
             int left = 0;
             int right = list.Count;
@@ -66,7 +66,7 @@ namespace LidelieLib{
             }
             return left;
         }
-        public static int UpperBound<T>(IReadOnlyList<T> list, T value, IComparer<T> comparer = null){
+        public static int UpperBound<T>(this IReadOnlyList<T> list, T value, IComparer<T> comparer = null){
             comparer ??= Comparer<T>.Default;
             int left = 0;
             int right = list.Count;
@@ -77,34 +77,56 @@ namespace LidelieLib{
             }
             return left;
         }
-        public static Array MakeArray<T>(T defaultVal, params int[] dims){
-            if (dims == null || dims.Length < 1)
-                throw new ArgumentException("Too few arguments");
-
-            return MakeArrayRecursive<T>(defaultVal, dims, 0);
+        public static T[] Accumulate<T>(this IList<T> list) where T : System.Numerics.INumber<T> {
+            for(int i = 0;i < list.Count - 1; i++){
+                list[i+1] += list[i];
+            }
+            return list.ToArray();
+        }
+        public static T[][] Accumulate<T>(this T[][] arr) where T : System.Numerics.INumber<T> {
+            int a = arr.Length;
+            int b = arr[0].Length;
+            for(int i = 0;i<a-1;i++){
+                for(int j = 0;j<b;j++){
+                    arr[i+1][j] += arr[i][j];
+                }
+            }
+            for(int i = 0;i<a;i++){
+                for(int j = 0;j<b-1;j++){
+                    arr[i][j+1] += arr[i][j];
+                }
+            }
+            return arr;
         }
 
-        private static Array MakeArrayRecursive<T>(T defaultVal, int[] dims, int index){
-            int len = dims[index];
+        public static T MakeArray<T>(object defaultVal, params int[] dims){
+            if (dims == null || dims.Length < 1)
+                throw new ArgumentException("Too few arguments", nameof(dims));
+            Type arrayType = typeof(T);
+            Type elementType = GetInnermostElementType(arrayType);
 
-            Type elementType = typeof(T);
-            for (int i = index; i < dims.Length - 1; i++){
-                elementType = elementType.MakeArrayType();
-            }
+            return (T)MakeArrayRecursive(arrayType, dims, 0, elementType, defaultVal);
+        }
+        private static object MakeArrayRecursive(Type currentType, int[] dims, int index, Type finalElementType, object defaultVal){
+            int size = dims[index];
 
-            Array array = Array.CreateInstance(elementType, len);
+            Array array = Array.CreateInstance(currentType.GetElementType(), size);
 
-            if (index == dims.Length - 1){
-                for (int i = 0; i < len; i++){
-                    array.SetValue(defaultVal, i);
-                }
+            if (index < dims.Length - 1){
+                for (int i = 0; i < size; i++)
+                    array.SetValue(MakeArrayRecursive(currentType.GetElementType(), dims, index + 1, finalElementType, defaultVal), i);
             }
             else{
-                for (int i = 0; i < len; i++){
-                    array.SetValue(MakeArrayRecursive<T>(defaultVal, dims, index + 1), i);
-                }
+                for (int i = 0; i < size; i++)
+                    array.SetValue(defaultVal, i);
             }
             return array;
+        }
+        private static Type GetInnermostElementType(Type type){
+            while (type.IsArray){
+                type = type.GetElementType();
+            }
+            return type;
         }
     }
 }
